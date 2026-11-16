@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اليوم العالمي للتسامح | طليعة الستون</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-gradient-start: #fdf8f5;
+            --bg-gradient-mid: #f4ebe4;
+            --bg-gradient-end: #e9ded4;
+            --primary-warm: #7c5841;
+            --primary-accent: #c58940;
+            --soft-rose: #d48c70;
+            --cream-board: #fffcf9;
+            --wood-frame: #6d4c3d;
+            --wood-border: #4a3228;
+            --rope-base: #c69c6d;
+            --rope-dark: #8c6239;
+            --rope-light: #e6c59c;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: radial-gradient(circle at top, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 55%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            margin: 0;
+            color: #3d2c22;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .amiri-font {
+            font-family: 'Amiri', serif;
+        }
+
+        /* شريط علوي غير ثابت على الشاشة */
+        .top-header {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 252, 249, 0.85);
+            border-bottom: 1px solid rgba(197, 137, 64, 0.25);
+            padding: 14px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* إطار اللوحة الخشبي الدافئ */
+        .board-frame {
+            background: linear-gradient(145deg, var(--wood-frame), var(--wood-border));
+            padding: 16px;
+            border-radius: 26px;
+            box-shadow: 
+                0 22px 45px rgba(74, 50, 40, 0.22),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.35);
+            position: relative;
+        }
+
+        /* سطح اللوحة الداخلي */
+        .board-surface {
+            background-color: var(--cream-board);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(212, 140, 112, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(197, 137, 64, 0.1) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, rgba(124, 88, 65, 0.02) 0px, rgba(124, 88, 65, 0.02) 2px, transparent 2px, transparent 8px);
+            border-radius: 16px;
+            border: 3px solid #d8b894;
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem 1.5rem;
+            box-shadow: inset 0 4px 18px rgba(74, 50, 40, 0.08);
+        }
+
+        /* خلفية إيموجي المصافحة داخل اللوحة */
+        .board-watermark {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.16;
+            font-size: 13rem;
+            line-height: 1;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .board-surface.all-unlocked .board-watermark {
+            opacity: 0.24;
+            transform: scale(1.06);
+        }
+
+        /* النصوص داخل اللوحة */
+        .board-text-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+        }
+
+        .main-slogan {
+            color: #5c3d2e;
+            text-shadow: 0 2px 10px rgba(197, 137, 64, 0.2);
+            transition: all 0.7s ease;
+        }
+
+        .board-surface.all-unlocked .main-slogan {
+            color: #8f4a28;
+            text-shadow: 0 4px 20px rgba(212, 140, 112, 0.45);
+            transform: scale(1.03);
+        }
+
+        /* حاوية الحبال والعقد الكشفية لتغطية اللوحة بالكامل */
+        .ropes-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .rope-unit {
+            position: absolute;
+            width: 130%;
+            left: -15%;
+            height: 115px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.65s ease;
+            pointer-events: none;
+        }
+
+        /* توزيع كثيف ومتقاطع للحبال لتغطية كامل مساحة اللوحة */
+        .rope-1 { top: -2%; transform: rotate(-6deg); }
+        .rope-2 { top: 14%; transform: rotate(7deg); }
+        .rope-3 { top: 30%; transform: rotate(-5deg); }
+        .rope-4 { top: 46%; transform: rotate(6deg); }
+        .rope-5 { top: 62%; transform: rotate(-7deg); }
+        .rope-6 { top: 77%; transform: rotate(5deg); }
+
+        /* الحبل المجدول السميك */
+        .rope-cord {
+            position: absolute;
+            width: 100%;
+            height: 36px;
+            background: repeating-linear-gradient(
+                -55deg,
+                var(--rope-light) 0px,
+                var(--rope-base) 8px,
+                var(--rope-dark) 16px,
+                var(--rope-base) 24px
+            );
+            border-radius: 18px;
+            box-shadow: 
+                0 8px 16px rgba(58, 38, 24, 0.45),
+                inset 0 3px 4px rgba(255, 255, 255, 0.5),
+                inset 0 -4px 6px rgba(58, 38, 24, 0.5);
+            border-top: 2px solid #754e29;
+            border-bottom: 2px solid #59391b;
+        }
+
+        /* حبل إضافي مزدوج لتكثيف التغطية */
+        .rope-cord-secondary {
+            position: absolute;
+            width: 100%;
+            height: 28px;
+            top: 58px;
+            background: repeating-linear-gradient(
+                55deg,
+                var(--rope-base) 0px,
+                var(--rope-dark) 8px,
+                var(--rope-light) 16px,
+                var(--rope-base) 24px
+            );
+            border-radius: 14px;
+            box-shadow: 0 6px 12px rgba(58, 38, 24, 0.4);
+            border-top: 1.5px solid #754e29;
+            border-bottom: 1.5px solid #59391b;
+        }
+
+        /* العقدة الكشفية الكبيرة القابلة للضغط */
+        .knot-btn {
+            position: relative;
+            z-index: 6;
+            pointer-events: auto;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 165px;
+            height: 125px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease, filter 0.25s ease;
+            filter: drop-shadow(0 10px 18px rgba(58, 38, 24, 0.5));
+        }
+
+        .knot-btn:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 12px 22px rgba(197, 137, 64, 0.7));
+        }
+
+        .knot-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* إزاحة أفقية متنوعة للعقد لتغطية وسط وأطراف النص */
+        .rope-1 .knot-btn { margin-right: 26%; }
+        .rope-2 .knot-btn { margin-left: 28%; }
+        .rope-3 .knot-btn { margin-right: 6%; }
+        .rope-4 .knot-btn { margin-left: 8%; }
+        .rope-5 .knot-btn { margin-right: 28%; }
+        .rope-6 .knot-btn { margin-left: 22%; }
+
+        .knot-badge {
+            position: absolute;
+            background: #5c3d2e;
+            color: #fffcf9;
+            font-weight: 800;
+            font-size: 1.05rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #f4d5a6;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+        }
+
+        /* حالة فك العقدة */
+        .rope-unit.untied {
+            opacity: 0;
+            transform: scale(1.25) translateY(-20px);
+            pointer-events: none;
+        }
+
+        .rope-unit.untied .knot-btn {
+            pointer-events: none;
+        }
+
+        /* النوافذ المنبثقة */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(58, 40, 30, 0.65);
+            backdrop-filter: blur(5px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: #fffcf9;
+            border: 2px solid #e2c6a7;
+            border-radius: 24px;
+            max-width: 560px;
+            width: 100%;
+            padding: 1.75rem;
+            box-shadow: 0 25px 50px rgba(58, 40, 30, 0.3);
+            transform: translateY(18px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-backdrop.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+
+        /* أزرار الخيارات */
+        .option-btn {
+            width: 100%;
+            text-align: right;
+            background: #fdf7f2;
+            border: 2px solid #e6d2be;
+            border-radius: 16px;
+            padding: 14px 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a3528;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .option-btn:hover {
+            background: #faeee4;
+            border-color: #c58940;
+            transform: translateX(-4px);
+        }
+
+        .option-btn.wrong {
+            background: #fde8e8;
+            border-color: #e05252;
+            color: #9b1c1c;
+            animation: shake 0.45s ease;
+        }
+
+        /* الإجابة الصحيحة باللون الأخضر */
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #14532d;
+        }
+
+        .option-btn.correct .option-letter {
+            background: #16a34a;
+            color: #ffffff;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        /* أوراق احتفالية ملونة متطايرة عند اكتمال اللوحة */
+        .petal {
+            position: fixed;
+            top: -20px;
+            z-index: 60;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(540deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .board-surface {
+                min-height: 410px;
+                padding: 1.5rem 1rem;
+            }
+            .board-watermark {
+                font-size: 9.5rem;
+            }
+            .knot-btn {
+                width: 135px;
+                height: 105px;
+            }
+            .rope-cord {
+                height: 30px;
+            }
+            .rope-cord-secondary {
+                height: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- عنصر الصوت النهائي الخاص بك -->
+    <audio id="custom-final-audio" preload="auto">
+        <source src="صفقة كشفية .MP3" type="audio/mpeg">
+    </audio>
+
+    <!-- الشريط العلوي -->
+    <header class="top-header">
+        <div>
+            <h1 class="text-xl md:text-2xl font-extrabold text-[#5c3d2e]">تحدي فك العُقد الكشفية</h1>
+            <p class="text-xs md:text-sm text-[#8c6b58]">طليعة الستون • اليوم العالمي للتسامح </p>
+        </div>
+
+        <!-- شريط التقدم -->
+        <div class="flex items-center gap-3 bg-[#f7ede4] px-4 py-2 rounded-full border border-[#e2c6a7]">
+            <span class="text-sm font-bold text-[#6d4c3d]" id="progress-text">0 / 6 عُقد</span>
+            <div class="w-28 sm:w-36 h-2.5 bg-[#e6d5c5] rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-l from-[#c58940] to-[#d48c70] transition-all duration-500" style="width: 0%;"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-6 max-w-4xl w-full mx-auto">
+        
+        <p class="text-center text-[#6d4c3d] font-medium mb-4 text-sm md:text-base">
+            اضغطي على كل عقدة كشفية وأجيبي عن الموقف المرتبط بها لتنحلّ العقد وتنكشف عبارة اللوحة
+        </p>
+
+        <!-- اللوحة الكبيرة -->
+        <div class="board-frame w-full">
+            <div class="board-surface" id="main-board">
+                
+                <!-- خلفية إيموجي المصافحة -->
+              <!-- خلفية صورة المصافحة مكبرة وواضحة -->
+<div class="board-watermark" aria-hidden="true" style="opacity: 0.22;">
+    <img src="hands.png" alt="مصافحة التسامح" style="width: 550px; max-width: 95%; height: auto; object-fit: contain;">
+</div>
+
+                <!-- نص اللوحة المخفي خلف العقد -->
+                <div class="board-text-content flex flex-col items-center">
+                    <h2 class="amiri-font main-slogan text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
+                        تسامُحنا.. قوةٌ وسلام
+                    </h2>
+                    
+                    <div class="inline-block px-6 py-2 rounded-full bg-[#f7ebe1]/95 border border-[#d8b894] shadow-sm mb-5">
+                        <p class="text-lg sm:text-xl md:text-2xl font-bold text-[#7c5841]">
+                            مع تحيات طليعة الستون
+                        </p>
+                    </div>
+
+                    <!-- مكان مخصص لاسم القائدة الكشفية ومديرة المدرسة -->
+                    <div class="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-[#e2c6a7]/80 text-center">
+                        <div class="bg-[#fdf7f2]/90 px-4 py-2.5 rounded-xl border border-[#e6d2be]">
+                            <span class="block text-xs font-bold text-[#8c6b58] mb-0.5">القائدة الكشفية</span>
+                            <!-- ضعي اسم القائدة هنا بدلاً من النقاط -->
+                            <span class="text-sm sm:text-base font-extrabold text-[#5c3d2e]">أ/ رانية جمبي</span>
+                        </div>
+                        <div class="bg-[#fdf7f2]/90 px-4 py-2.5 rounded-xl border border-[#e6d2be]">
+                            <span class="block text-xs font-bold text-[#8c6b58] mb-0.5">مديرة المدرسة</span>
+                            <!-- ضعي اسم المديرة هنا بدلاً من النقاط -->
+                            <span class="text-sm sm:text-base font-extrabold text-[#5c3d2e]">د/ ريم صديق</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الحبال الستة والعقد الكشفية المغطية للوحة -->
+                <div class="ropes-overlay" id="ropes-container">
+                    <!-- يتم توليد الحبال والعقد عبر الجافاسكربت -->
+                </div>
+
+            </div>
+        </div>
+
+        <!-- رسالة التهنئة عند فك جميع العقد -->
+        <div id="completion-banner" class="hidden mt-6 text-center bg-[#fffcf9] border-2 border-[#d8b894] rounded-2xl p-5 shadow-md max-w-xl w-full">
+            <h3 class="text-xl font-extrabold text-[#8f4a28] mb-1">مبروك انحلّت جميع العُقد</h3>
+            <p class="text-sm sm:text-base text-[#5c3d2e] mb-4">
+                بالتسامح تصفو القلوب، وتزول عُقد الضغينة، وتبقى المحبة والسلام بيننا.
+            </p>
+            <button onclick="resetGame()" class="px-6 py-2.5 rounded-xl bg-[#7c5841] hover:bg-[#5c3d2e] text-white font-bold text-sm transition cursor-pointer shadow">
+                إعادة التحدي من جديد
+            </button>
+        </div>
+
+    </main>
+
+    <!-- نافذة البداية التوضيحية -->
+    <div id="intro-modal" class="modal-backdrop active">
+        <div class="modal-card text-center">
+            <!-- إيموجي المصافحة الواضح -->
+            <div class="w-24 h-24 mx-auto mb-3 rounded-full bg-[#faeee4] border-2 border-[#e2c6a7] flex items-center justify-center shadow-sm text-5xl">
+                🤝🏻
+            </div>
+
+            <h2 class="text-2xl font-extrabold text-[#5c3d2e] mb-3">أهلاً بكِ في تحدي التسامح</h2>
+            <p class="text-[#5c3d2e] leading-relaxed text-base mb-6 bg-[#fdf7f2] p-4 rounded-2xl border border-[#ebd5c1]">
+                تماماً مثل هذه العُقد الكشفية التي تغطي اللوحة، فإن <strong class="text-[#8f4a28]">الضغينة وسوء الفهم</strong> يصنعان عُقداً في قلوبنا تحجب عنا جمال المحبة والسلام.
+                <br><br>
+                اضغطي على كل عقدة، وحلّي الموقف التربوي لتنحلّ العقدة وتظهر عبارة اللوحة كاملة!
+            </p>
+            <button onclick="startGame()" class="w-full py-3.5 rounded-xl bg-gradient-to-l from-[#8f4a28] to-[#c58940] hover:opacity-95 text-white font-extrabold text-lg shadow-lg transition cursor-pointer">
+                ابدئي فك العُقد الآن
+            </button>
+        </div>
+    </div>
+
+    <!-- نافذة السؤال / اللغز -->
+    <div id="question-modal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="flex items-center justify-between border-b border-[#ebd5c1] pb-3 mb-4">
+                <span id="modal-knot-title" class="px-3.5 py-1 rounded-full bg-[#faeee4] text-[#8f4a28] font-extrabold text-sm border border-[#e2c6a7]">
+                    العقدة الكشفية 1
+                </span>
+                <button onclick="closeQuestionModal()" class="text-[#8c6b58] hover:text-[#3d2c22] font-bold text-xl leading-none px-2 cursor-pointer" title="إغلاق">
+                    ✕
+                </button>
+            </div>
+
+            <p id="modal-question-text" class="text-[#3d2c22] font-bold text-base sm:text-lg leading-relaxed mb-5">
+                <!-- نص السؤال -->
+            </p>
+
+            <div id="modal-options" class="space-y-3">
+                <!-- الخيارات -->
+            </div>
+
+            <div id="modal-feedback" class="hidden mt-4 p-3.5 rounded-xl text-sm font-bold text-center">
+                <!-- رسالة التغذية الراجعة -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const knotsData = [
+            {
+                id: 1,
+                title: "سؤال العقدة 1",
+                question: "الموقف: في أسبوع الاختبارات النهائية، كانت سارة متوترة للغاية بسبب صعوبة مادة الفيزياء. طلبت منها زميلتها نورة استعارة دفتر الملاحظات لتصويره، فردّت سارة بعصبية وصوت مرتفع أمام الطالبات: ليس لدي وقت لكِ الآن، اعتمدي على نفسكِ. شعرت نورة بالإحراج والحزن، ولكن نظراً لأنها تقدر ضغط صديقتها، فما هو التصرف المتسامح الذي ينبغي أن تفعله نورة؟",
+                options: [
+                    { label: "أ", text: "أن تقاطع سارة تماماً ولا تتحدث معها مرة أخرى لتتعلم كيف تضبط أعصابها.", isCorrect: false },
+                    { label: "ب", text: "أن تنتظر حتى ينتهي الاختبار، ثم تذهب إليها بهدوء لتقدر ضغطها وتقبل اعتذارها عندما تبادر به، أو تبادر هي بفتح صفحة جديدة.", isCorrect: true },
+                    { label: "ج", text: "أن ترد عليها بنفس النبرة الحادة أمام الطالبات لكي تحفظ كرامتها ولا تظهر بموقف الضعيف.", isCorrect: false }
+                ]
+            },
+            {
+                id: 2,
+                title: "سؤال العقدة 2",
+                question: "الموقف: انتشرت رسالة في مجموعة الفصل تُسيء لإحدى الطالبات الجدد وتتهمها بالتكبر لأنها لا تتحدث كثيراً. بدلاً من أن تشارك لمى في السخرية أو تتجاهل الأمر بصمت، ما هو التصرف الذي يعكس روح التسامح وحسن الظن الذي قامت به لمى؟",
+                options: [
+                    { label: "أ", text: "أن تقوم بنشر رسالة دفاع مطولة في المجموعة وتوبخ جميع الطالبات بقسوة وتهددهن.", isCorrect: false },
+                    { label: "ب", text: "أن تترك المجموعة وتغادر دون أن توضح شيئاً لتتجنب المشاكل.", isCorrect: false },
+                    { label: "ج", text: "أن تبادر بالجلوس مع الطالبة الجديدة وتتحقق من الأمر بلطف، ثم توضح لزميلاتها في المجموعة بحكمة أن الحكم على الآخرين من الظاهر خطأ وتدعوهم للترحيب بها.", isCorrect: true }
+                ]
+            },
+            {
+                id: 3,
+                title: "لغز العقدة 3",
+                question: "السؤال: أنا مفتاح عجيب؛ لا أفتح أبواب الغرف، ولا خزائن الأموال، بل أفتح أبواباً أُغلقت بفعل الغضب وسوء التفاهم، وكلما استخدمتني نبتت بين القلوب مودة جديدة، فمن أنا؟",
+                options: [
+                    { label: "أ", text: "الكلمة الطيبة", isCorrect: true },
+                    { label: "ب", text: "العفو", isCorrect: false },
+                    { label: "ج", text: "الشجاعة", isCorrect: false }
+                ]
+            },
+            {
+                id: 4,
+                title: "سؤال العقدة 4",
+                question: "يُعرف التسامح بأنه شجاعة الأقوياء، فما هو السلوك العملي الذي يجسد هذا المعنى بدقة عند حدوث خلاف بين الزميلات؟",
+                options: [
+                    { label: "أ", text: "أن تنتقم الفتاة لنفسها فوراً وبنفس الحدة حتى لا يظن الآخرون أنها ضعيفة.", isCorrect: false },
+                    { label: "ب", text: "أن تمتلك القدرة على الرد أو العتاب القاسي، لكنك تختار الصفح والتسامح وفتح صفحة جديدة بإرادتها الكاملة.", isCorrect: true },
+                    { label: "ج", text: "أن تقاطع زميلتها تماماً وتتجنب الحديث معها لأشهر طويلة لتأديبها.", isCorrect: false }
+                ]
+            },
+            {
+                id: 5,
+                title: "سؤال العقدة 5",
+                question: "كلمة قصيرة نقولها حين نخطئ، وتساعد على الصلح. ما هي؟",
+                options: [
+                    { label: "أ", text: "آسفة", isCorrect: true },
+                    { label: "ب", text: "ليس خطأي", isCorrect: false },
+                    { label: "ج", text: "اعتذري أنتِ أولًا", isCorrect: false }
+                ]
+            },
+            {
+                id: 6,
+                title: "سؤال العقدة 6",
+                question: "ما هي النتيجة النفسية المباشرة التي يختبرها الإنسان عندما يقرر التخلي عن الرغبة في الانتقام وتجاوز الإساءة؟",
+                options: [
+                    { label: "أ", text: "شعور مؤقت بالضعف والخسارة أمام الطرف الآخر.", isCorrect: false },
+                    { label: "ب", text: "زيادة التوتر والتفكير المستمر في كيفية رد الإساءة لاحقاً.", isCorrect: false },
+                    { label: "ج", text: "الشعور بالراحة النفسية والصفاء الذهني.", isCorrect: true }
+                ]
+            }
+        ];
+
+        let solvedIds = new Set();
+        let activeKnotId = null;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // الصوت الأصلي لفك العقد
+        function playUntieSound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.35);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.36);
+                });
+            } catch (e) {}
+        }
+
+        // صوت تنبيه للإجابة الخاطئة
+        function playWrongSound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(175, now + 0.25);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } catch (e) {}
+        }
+
+        // الصوت الاحتفالي الأصلي + تشغيل الملف الصوتي المخصص إن وجد
+        function playFinalVictorySound() {
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
+                const melody = [
+                    { freq: 523.25, time: 0, dur: 0.15 },
+                    { freq: 659.25, time: 0.14, dur: 0.15 },
+                    { freq: 783.99, time: 0.28, dur: 0.15 },
+                    { freq: 1046.50, time: 0.44, dur: 0.45 },
+                    { freq: 783.99, time: 0.65, dur: 0.15 },
+                    { freq: 1046.50, time: 0.82, dur: 0.65 }
+                ];
+                melody.forEach(item => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(item.freq, now + item.time);
+                    gain.gain.setValueAtTime(0.18, now + item.time);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + item.time + item.dur);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + item.time);
+                    osc.stop(now + item.time + item.dur + 0.02);
+                });
+            } catch (e) {}
+
+            const finalAudio = document.getElementById('custom-final-audio');
+            if (finalAudio) {
+                finalAudio.currentTime = 0;
+                finalAudio.play().catch(() => {});
+            }
+        }
+
+        // رسم العقدة الكشفية المربعة الكبيرة (Square Knot SVG)
+        function createScoutKnotSVG(number) {
+            return `
+                <svg viewBox="0 0 160 115" class="w-full h-full overflow-visible">
+                    <defs>
+                        <linearGradient id="knotGrad1-${number}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#e8c396"/>
+                            <stop offset="50%" stop-color="#c2935d"/>
+                            <stop offset="100%" stop-color="#875c2f"/>
+                        </linearGradient>
+                        <linearGradient id="knotGrad2-${number}" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#dfb584"/>
+                            <stop offset="50%" stop-color="#b3824c"/>
+                            <stop offset="100%" stop-color="#784f24"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- الحلقة اليسرى الكبيرة للعقدة -->
+                    <path d="M 32 36 C 10 36, 10 78, 32 78 L 78 78 C 94 78, 94 36, 78 36 Z" 
+                          fill="none" stroke="#59391b" stroke-width="26" stroke-linecap="round"/>
+                    <path d="M 32 36 C 10 36, 10 78, 32 78 L 78 78 C 94 78, 94 36, 78 36 Z" 
+                          fill="none" stroke="url(#knotGrad1-${number})" stroke-width="21" stroke-linecap="round"/>
+                    
+                    <!-- الحلقة اليمنى الكبيرة المتداخلة -->
+                    <path d="M 128 36 C 150 36, 150 78, 128 78 L 82 78 C 66 78, 66 36, 82 36 Z" 
+                          fill="none" stroke="#59391b" stroke-width="26" stroke-linecap="round"/>
+                    <path d="M 128 36 C 150 36, 150 78, 128 78 L 82 78 C 66 78, 66 36, 82 36 Z" 
+                          fill="none" stroke="url(#knotGrad2-${number})" stroke-width="21" stroke-linecap="round"/>
+
+                    <!-- عقدة الربط الوسطى العلوية -->
+                    <path d="M 54 26 C 66 20, 76 46, 62 88" fill="none" stroke="#59391b" stroke-width="24" stroke-linecap="round"/>
+                    <path d="M 54 26 C 66 20, 76 46, 62 88" fill="none" stroke="url(#knotGrad1-${number})" stroke-width="19" stroke-linecap="round"/>
+
+                    <path d="M 106 26 C 94 20, 84 46, 98 88" fill="none" stroke="#59391b" stroke-width="24" stroke-linecap="round"/>
+                    <path d="M 106 26 C 94 20, 84 46, 98 88" fill="none" stroke="url(#knotGrad2-${number})" stroke-width="19" stroke-linecap="round"/>
+                </svg>
+                <span class="knot-badge">${number}</span>
+            `;
+        }
+
+        function renderRopes() {
+            const container = document.getElementById('ropes-container');
+            container.innerHTML = '';
+
+            knotsData.forEach((knot) => {
+                const ropeDiv = document.createElement('div');
+                ropeDiv.className = `rope-unit rope-${knot.id}`;
+                ropeDiv.id = `rope-unit-${knot.id}`;
+                if (solvedIds.has(knot.id)) {
+                    ropeDiv.classList.add('untied');
+                }
+
+                ropeDiv.innerHTML = `
+                    <div class="rope-cord"></div>
+                    <div class="rope-cord-secondary"></div>
+                    <button class="knot-btn" onclick="openQuestion(${knot.id})" aria-label="فتح ${knot.title}">
+                        ${createScoutKnotSVG(knot.id)}
+                    </button>
+                `;
+                container.appendChild(ropeDiv);
+            });
+        }
+
+        function startGame() {
+            initAudio();
+            document.getElementById('intro-modal').classList.remove('active');
+        }
+
+        function openQuestion(knotId) {
+            if (solvedIds.has(knotId)) return;
+            activeKnotId = knotId;
+            const knot = knotsData.find(k => k.id === knotId);
+            if (!knot) return;
+
+            document.getElementById('modal-knot-title').textContent = knot.title;
+            document.getElementById('modal-question-text').textContent = knot.question;
+
+            const feedbackEl = document.getElementById('modal-feedback');
+            feedbackEl.classList.add('hidden');
+            feedbackEl.textContent = '';
+
+            const optionsContainer = document.getElementById('modal-options');
+            optionsContainer.innerHTML = '';
+
+            knot.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `
+                    <span class="option-letter shrink-0 w-7 h-7 rounded-full bg-[#e6d2be] text-[#5c3d2e] font-extrabold flex items-center justify-center text-sm mt-0.5 transition-colors">
+                        ${opt.label}
+                    </span>
+                    <span class="leading-relaxed">${opt.text}</span>
+                `;
+                btn.onclick = () => handleAnswer(btn, opt.isCorrect);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('question-modal').classList.add('active');
+        }
+
+        function closeQuestionModal() {
+            document.getElementById('question-modal').classList.remove('active');
+            activeKnotId = null;
+        }
+
+        function handleAnswer(btnElement, isCorrect) {
+            const feedbackEl = document.getElementById('modal-feedback');
+            const allBtns = document.querySelectorAll('#modal-options .option-btn');
+
+            if (isCorrect) {
+                allBtns.forEach(b => b.disabled = true);
+                btnElement.classList.add('correct');
+
+                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm font-bold text-center bg-[#dcfce7] text-[#14532d] border border-[#16a34a]';
+                feedbackEl.textContent = 'أحسنتِ! إجابة صحيحة، انحلّت هذه العقدة بنجاح.';
+                feedbackEl.classList.remove('hidden');
+
+                const currentId = activeKnotId;
+                solvedIds.add(currentId);
+                const isLastKnot = solvedIds.size === knotsData.length;
+
+                if (isLastKnot) {
+                    playFinalVictorySound();
+                } else {
+                    playUntieSound();
+                }
+
+                setTimeout(() => {
+                    closeQuestionModal();
+                    const ropeUnit = document.getElementById(`rope-unit-${currentId}`);
+                    if (ropeUnit) {
+                        ropeUnit.classList.add('untied');
+                    }
+                    updateProgress();
+                }, 900);
+
+            } else {
+                playWrongSound();
+                btnElement.classList.remove('wrong');
+                void btnElement.offsetWidth;
+                btnElement.classList.add('wrong');
+
+                feedbackEl.className = 'mt-4 p-3.5 rounded-xl text-sm font-bold text-center bg-[#fde8e8] text-[#9b1c1c] border border-[#f87171]';
+                feedbackEl.textContent = 'حاولي مرة أخرى! فكّري في التصرف الذي يعكس التسامح الحقيقي.';
+                feedbackEl.classList.remove('hidden');
+            }
+        }
+
+        function updateProgress() {
+            const count = solvedIds.size;
+            const total = knotsData.length;
+            const percent = (count / total) * 100;
+
+            document.getElementById('progress-text').textContent = `${count} / ${total} عُقد`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            if (count === total) {
+                const board = document.getElementById('main-board');
+                board.classList.add('all-unlocked');
+                document.getElementById('completion-banner').classList.remove('hidden');
+                launchColorfulPetals();
+            }
+        }
+
+        function launchColorfulPetals() {
+            const colors = ['#ff4d6d', '#ffbe0b', '#3a86ff', '#06d6a0', '#8338ec', '#fb5607', '#ff70a6'];
+            for (let i = 0; i < 60; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                const size = Math.random() * 11 + 8;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size * 0.65}px`;
+                petal.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                petal.style.borderRadius = i % 2 === 0 ? '50% 0 50% 0' : '4px';
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.animationDuration = `${Math.random() * 2.5 + 2.5}s`;
+                petal.style.animationDelay = `${Math.random() * 0.8}s`;
+                document.body.appendChild(petal);
+
+                setTimeout(() => {
+                    petal.remove();
+                }, 5500);
+            }
+        }
+
+        function resetGame() {
+            solvedIds.clear();
+            document.getElementById('main-board').classList.remove('all-unlocked');
+            document.getElementById('completion-banner').classList.add('hidden');
+            const finalAudio = document.getElementById('custom-final-audio');
+            if (finalAudio) {
+                finalAudio.pause();
+                finalAudio.currentTime = 0;
+            }
+            updateProgress();
+            renderRopes();
+        }
+
+        renderRopes();
+    </script>
+</body>
+</html>
